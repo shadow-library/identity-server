@@ -80,11 +80,18 @@ describe('BootstrapService', () => {
     expect(organisations).toHaveLength(1);
   });
 
-  it('should not auto-provision any first-party consumer application or client (clean deployment)', async () => {
+  it('should register first-party API resources and the service-only publish scope, but no consumer clients', async () => {
+    /** Resources are seeded declaratively so audience/scope validation has something to validate against; clients (with secrets) stay console-registered. */
     const applications = await env.getPostgresClient().select().from(schema.applications);
-    /** Only the identity platform itself may exist after a clean bootstrap — no pulse/novel-forge/webnovel. */
-    expect(applications.map(app => app.name)).toEqual(['shadow-identity']);
+    expect(applications.map(app => app.name).sort()).toEqual(['novel-forge', 'shadow-identity', 'webnovel']);
 
+    const resources = await env.getPostgresClient().select().from(schema.apiResources);
+    expect(resources.map(resource => resource.identifier).sort()).toEqual(['novel-forge-server', 'shadow-identity', 'webnovel-server']);
+
+    const publishScope = (await env.getPostgresClient().select().from(schema.scopes)).find(scope => scope.name === 'webnovel:publish');
+    expect(publishScope?.principalType).toBe('SERVICE');
+
+    /** No consumer clients are auto-provisioned — client credentials remain a console/admin responsibility. */
     const clients = await env.getPostgresClient().select().from(schema.oauthClients);
     expect(clients).toHaveLength(0);
 
