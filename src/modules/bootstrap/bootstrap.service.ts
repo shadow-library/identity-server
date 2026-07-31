@@ -50,7 +50,7 @@ const ADMIN_PERMISSION_DESCRIPTIONS: Record<string, string> = {
  * administrative role assignments, and a bootstrap administrator account. Runs on every boot and
  * is a no-op once the records exist, so it is safe under horizontal scaling and repeated restarts.
  *
- * First-party ecosystem applications (pulse, novel-forge, webnovel) are provisioned by
+ * First-party ecosystem applications (pulse, novel-forge, web-novel) are provisioned by
  * {@link EcosystemSeedService}, invoked as the final bootstrap step so it can rely on the platform
  * application already existing; any other consumer application is registered by an administrator
  * through the console.

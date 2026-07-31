@@ -77,11 +77,11 @@ const APP_SESSION_SCOPE = 'app-session:manage';
  */
 const PULSE_APP = 'pulse';
 const NOVEL_FORGE_APP = 'novel-forge';
-const WEBNOVEL_APP = 'webnovel';
+const WEBNOVEL_APP = 'web-novel';
 
 const NOTIFICATIONS_SEND_SCOPE = 'notifications:send';
 /** Service-only: a user token can never carry it, and only a granted M2M client may request it. */
-const WEBNOVEL_PUBLISH_SCOPE = 'webnovel:publish';
+const WEBNOVEL_PUBLISH_SCOPE = 'web-novel:publish';
 const IDENTITY_SERVICE_CLIENT = 'identity-server';
 
 const SEEDED_APPLICATIONS: Record<string, SeededApplication> = {
@@ -285,10 +285,10 @@ export class EcosystemSeedService {
   }
 
   /**
-   * The two authoring-side applications (D-21): novel-forge and webnovel, each provisioned exactly like
-   * pulse. webnovel additionally defines the service-only `webnovel:publish` scope, which novel-forge is
+   * The two authoring-side applications (D-21): novel-forge and web-novel, each provisioned exactly like
+   * pulse. web-novel additionally defines the service-only `web-novel:publish` scope, which novel-forge is
    * granted as its delegation ceiling (D-22, surfaced by `GET /api/v1/apps/me` as a grant) and reaches
-   * through a deny-by-default service-access rule on webnovel's internal routes (D-17).
+   * through a deny-by-default service-access rule on web-novel's internal routes (D-17).
    */
   private async ensureAuthoringApplications(scopes: PlatformScopes): Promise<void> {
     const novelForgeId = await this.ensureApplication(NOVEL_FORGE_APP);
@@ -300,7 +300,7 @@ export class EcosystemSeedService {
     const publishScopeId = await this.oauthClientService.createScope(webnovelResource.id, WEBNOVEL_PUBLISH_SCOPE, 'Publish rendered novels to the reader', false, 'SERVICE');
     await this.ensureAppClient(webnovelId, WEBNOVEL_APP, [scopes.authzCheck, scopes.appSession]);
 
-    /** novel-forge delegates onto webnovel: its grant on `webnovel:publish` is the ceiling `/apps/me` surfaces. */
+    /** novel-forge delegates onto web-novel: its grant on `web-novel:publish` is the ceiling `/apps/me` surfaces. */
     await this.oauthClientService.grantScope(NOVEL_FORGE_APP, publishScopeId);
     await this.serviceAccessService.create({
       applicationId: webnovelId,
