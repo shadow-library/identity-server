@@ -1,3 +1,6 @@
+> **Archived — migrated to the [platform monorepo](https://github.com/shadow-library/platform).**
+> This code now lives at [`apps/identity-server`](https://github.com/shadow-library/platform/tree/main/apps/identity-server) with its full history; this repository is read-only.
+
 # 🪪 Shadow Identity
 
 The **Shadow Identity** is the central hub for **user identity, authentication, and authorization** within the ecosystem.
